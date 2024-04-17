@@ -1,3 +1,4 @@
+@REM ECHO OFF suppress the display of commands as they are executed.
 @ECHO OFF
 title Utility Program
 color 7
@@ -576,6 +577,8 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     echo                         [92mKx-----  Python is found lurking around, so I'll lend you my power -----Cx[0m
     goto:pyProj
     )
+
+@REM this command pings the Google website twice with a timeout of 1000 milliseconds for each request, and it suppresses both the standard output and error messages, making the command run silently without producing any visible output in the command prompt window
 
 :chekInt
     Ping www.google.com -n 2 -w 1000 >NUL 2>&1
