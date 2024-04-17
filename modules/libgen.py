@@ -109,13 +109,7 @@ def author_search():
     global author_name
     author_name = input("Enter the book author name: ").strip()
     if len(author_name) >= 3:
-        return (
-            (author_name, "search_author")
-            if helper_func.chkreg(
-                "", (input("Do you want to enable advanced book search? [Y/N]: "))
-            )
-            else process_it(get_rawdata.search_author(author_name))
-        )
+        return process_it(get_rawdata.search_author(author_name))
     cprint("Author name must be at least 3 words", "red")
     return author_search()
 
