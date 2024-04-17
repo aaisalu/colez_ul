@@ -13,7 +13,9 @@ just_fix_windows_console()
 
 def create_folder(file_name):
     global Path
+    # get the login name of the currently logged-in user
     get_user = os.getlogin()
+    #  generate a file path to the desktop directory of the current user on a Windows operating system.
     desktop = os.path.join(os.path.join(os.environ["USERPROFILE"]), "Desktop")
     try:
         Path = rf"{desktop}\{get_user}_repo\{file_name}"
