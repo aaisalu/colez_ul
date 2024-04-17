@@ -151,5 +151,12 @@ def main():
     sys.exit(0)
 
 
+# main guard" or "main block" in Python.
+# This block of code is used to ensure that the code inside the if __name__ == "__main__": block only runs if the script is executed directly, and not if it's imported as a module into another script.
+# It's a way to differentiate between whether the script is being used as the main program or if it's being imported as a module into another program.
 if __name__ == "__main__":
     main()
+
+
+# NOTE
+# := symbol is called the "walrus operator useful in situations where you want to assign a value to a variable as part of a larger expression,

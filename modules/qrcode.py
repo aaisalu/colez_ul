@@ -87,6 +87,10 @@ def roulette(value):
         )
 
 
+# This regular expression pattern matches URLs with optional protocols (http, https, or ftp), followed by a colon and two forward slashes, then any combination of characters (such as path, query parameters, or special characters), and finally an optional "www." prefix in the domain name.
+# \b: This matches a word boundary, ensuring that the pattern doesn't match URLs that are part of longer strings of characters.
+
+
 def eliminate(input, ext):
     info = re.sub(
         r"(https|http|ftp)?:\/\/(\.|\/|\?|\=|\&|\%)*\b(www.)*",
