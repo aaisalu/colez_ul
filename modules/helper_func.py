@@ -58,7 +58,7 @@ def view_file(filename):
     return cprint(f"\nSaved at {filename}", "green")
 
 
-def tabuate_it(table, headers, color):
+def tabulate_it(table, headers, color):
     return cprint(tabulate(table, headers, tablefmt="fancy_grid"), color)
 
 

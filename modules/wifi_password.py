@@ -3,7 +3,7 @@
 import random
 import subprocess
 import helper_func
-from helper_func import tabuate_it
+from helper_func import tabulate_it
 
 # Refrence command for executing:  netsh wlan show profile name="network name" key=clear
 
@@ -70,7 +70,7 @@ def main():
         if wifi_data is None:
             continue  # Skip this profile and move to the next one
         result_list.append([i, profile, wifi_data[0], wifi_data[1]])
-    tabuate_it(result_list, headers, "green")
+    tabulate_it(result_list, headers, "green")
     wifi_directory = helper_func.create_folder("WiFi_keys")
     with open(rf"{wifi_directory}/wifi_{random_number}.csv", "w") as file:
         # Write the headers to the file
