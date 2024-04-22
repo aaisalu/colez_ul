@@ -1,4 +1,5 @@
 import sqlite3
+import sys
 from helper_func import tabulate_it
 
 
@@ -181,10 +182,6 @@ class UserTypeDatabase:
             return False
 
 
-# Instantiate an object of the AdminDatabase class
-admin_db = UserTypeDatabase("admin_database.db")
-
-
 def display_tasks():
     """Display tasks to add user, delete user, update password, and run these tasks."""
     table_data = [
@@ -200,37 +197,61 @@ def display_tasks():
 
     if choice == "1":
         # Add User
-        admin_name = input("Enter admin name: ")
+        user_name = input("Enter user name: ")
         password = input("Enter password: ")
-        admin_db.add_user_to_table((admin_name, password), is_logged_in=True)
+        user_type_db.add_user_to_table((user_name, password), is_logged_in=True)
     elif choice == "2":
         # Delete User
-        admin_name = input("Enter admin name: ")
-        if admin_db.check_user_existence(admin_name):
+        user_name = input("Enter admin name: ")
+        if user_type_db.check_user_existence(user_name):
             password = input("Enter password: ")
-            admin_db.delete_user(admin_name, password)
+            user_type_db.delete_user(user_name, password)
         else:
-            print("Admin does not exist")
+            print("User does not exist")
     elif choice == "3":
         # Update Password
         current_username = input("Enter current username: ")
-        if admin_db.check_user_existence(current_username):
+        if user_type_db.check_user_existence(current_username):
             current_password = input("Enter current password: ")
             new_password = input("Enter new password: ")
-            admin_db.update_password(current_username, current_password, new_password)
+            user_type_db.update_password(
+                current_username, current_password, new_password
+            )
         else:
-            print("Admin does not exist")
+            print("User does not exist")
     elif choice == "4":
-        admin_db.view_data_table()
+        user_type_db.view_data_table()
     elif choice == "0":
         print("Exiting...")
-        admin_db.close_connection()
+        user_type_db.close_connection()
     else:
         print("Invalid choice. Please try again.")
         display_tasks()
     # After performing all necessary operations, close the database connection
-    admin_db.close_connection()
+    user_type_db.close_connection()
 
 
-# Display initial tasks
-display_tasks()
+def authenticate_user(user_type="user"):
+    user_name = input("Enter user name: ")
+    password = input("Enter password: ")
+    if user_type_db.validate_user(user_name, password, user_type):
+        print(f"Access have been granted to run {user_type} task")
+    else:
+        print(f"You don't have acess to run {user_type} task")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        # Instantiate an object of the AdminDatabase class
+        user_type_db = UserTypeDatabase("admin_database.db")
+        if sys.argv[1] == "admin_level":
+            authenticate_user(user_type="admin")
+        elif sys.argv[1] == "user_level":
+            authenticate_user(user_type="user")
+        elif sys.argv[1] == "admin_task":
+            display_tasks()
+        else:
+            print("Invalid argument.")
+        user_type_db.close_connection()
+    else:
+        print("Please provide an argument")

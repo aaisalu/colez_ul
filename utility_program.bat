@@ -24,12 +24,14 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     echo[
     echo    Press 1 = Summon Python Program
     echo    Press 2 = Utility Program
+    echo    Press 3 = Control Panel
     echo    [90mPress 0 = Leave[0m
     echo[
     :brain
-    set /P brn=Feed me just number so, I can work for you!! [1-2]:
-    if /I "%brn%" EQU "1" ( goto :chkifpy
-    ) else if  /I "%brn%" EQU "2" ( goto :farfrom
+    set /P brn=Feed me just number so, I can work for you!! [1-3]:
+    if /I "%brn%" EQU "1" ( goto :userLevel
+    ) else if  /I "%brn%" EQU "2" ( goto :adminLevel
+    ) else if  /I "%brn%" EQU "3" ( goto :controlPanel
     ) else if  /I "%brn%" EQU "0" ( goto :exitProgram
     ) else (goto :choice)
 
@@ -568,10 +570,11 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     echo                         [92mKx-----  Python is found lurking around, so I'll lend you my power -----Cx[0m
     goto:pyProj
     ) ELSE (
-    echo Donwloading get-pip.py from bootstrap.pypa.io/get-pip.py
+    @REM echo Downloading get-pip.py from bootstrap.pypa.io/get-pip.py
     echo [92mInstalling pip and requirements for the python script to work[0m
     echo[
-    cmd /k "cd %~dp0\venv\Scripts & activate & cd /d  %~dp0 & curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py & python get-pip.py & python -m pip install -U pip & cd /d %~dp0 & pip install -U -r requirements.txt & cd /d%~dp0\venv\Scripts & deactivate.bat & exit"
+    @REM temporary disabling the downlading and installing requirements
+    @REM cmd /k "cd %~dp0\venv\Scripts & activate & cd /d  %~dp0 & curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py & python get-pip.py & python -m pip install -U pip & cd /d %~dp0 & pip install -U -r requirements.txt & cd /d%~dp0\venv\Scripts & deactivate.bat & exit"
     echo [92mSuccessfully installed pip and required requirements![0m
     echo[
     echo                         [92mKx-----  Python is found lurking around, so I'll lend you my power -----Cx[0m
@@ -604,6 +607,17 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     )
     goto:chekInt
 
+:controlPanel
+    cd %~dp0\
+    cmd /k "cd %~dp0\venv\Scripts & activate & cd /d %~dp0\modules & python verify_admin.py admin_level & exit"
+    SET EXIT_CODE=%ERRORLEVEL%
+    IF %EXIT_CODE% neq 1 (
+        goto:cpanel
+    ) ELSE (
+        echo You don't have have access to contol Panel
+        goto:choice
+    )
+
 :chkifpy
     @echo off
     python --version >NUL 2>&1
@@ -621,8 +635,30 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     goto:choco
     )
 
+:adminLevel
+    cd %~dp0\
+    cmd /k "cd %~dp0\venv\Scripts & activate & cd /d %~dp0\modules & python verify_admin.py admin_level & exit"
+    SET EXIT_CODE=%ERRORLEVEL%
+    IF %EXIT_CODE% neq 1 (
+        goto:farfrom
+    ) ELSE (
+        echo You don't have have access to run the admin task
+        goto:choice
+    )
+:userLevel
+    cd %~dp0\
+    cmd /k "cd %~dp0\venv\Scripts & activate & cd /d %~dp0\modules & python verify_admin.py user_level & exit"
+    SET EXIT_CODE=%ERRORLEVEL%
+    IF %EXIT_CODE% neq 1 (
+        goto:chkifpy
+    ) ELSE (
+        echo You don't have have access to run the user task
+        goto:choice
+    )
 
-
+:cpanel
+    cmd /k "cd %~dp0\venv\Scripts & activate & cd /d %~dp0\modules & python verify_admin.py admin_task & cd /d%~dp0\venv\Scripts & deactivate.bat & exit"
+    goto:choice
 ::  %~dp0
 ::  %0 refers to the current batch script file.
 ::  %~ removes any surrounding quotation marks (if present).
