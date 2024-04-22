@@ -88,15 +88,25 @@ class UserTypeDatabase:
         if self.check_user_existence(username, user_type):
             # Validate user by checking if admin_name and password match any record in the database.
             if self.validate_user(username, password):
-                # Delete the user from the database
-                delete_query = f"""
-                DELETE FROM {user_type}
-                WHERE {user_type}_name = ? AND password = ?
+                # Count the number of entries in the database for the given user type
+                count_query = f"""
+                SELECT COUNT(*) FROM {user_type}
                 """
-                cursor.execute(delete_query, (username, password))
-                self.conn.commit()
-                self.reassign_serial_numbers(user_type)
-                print("User deleted successfully.")
+                cursor.execute(count_query)
+                num_entries = cursor.fetchone()[0]
+
+                if num_entries == 1:
+                    print("Cannot delete the last user entry.")
+                else:
+                    # Delete the user from the database
+                    delete_query = f"""
+                    DELETE FROM {user_type}
+                    WHERE {user_type}_name = ? AND password = ?
+                    """
+                    cursor.execute(delete_query, (username, password))
+                    self.conn.commit()
+                    self.reassign_serial_numbers(user_type)
+                    print("User deleted successfully.")
             else:
                 print(
                     "Authentication failed. Please provide correct username and password."
@@ -200,12 +210,14 @@ def display_tasks():
         user_name = input("Enter user name: ")
         password = input("Enter password: ")
         user_type_db.add_user_to_table((user_name, password), is_logged_in=True)
+        display_tasks()
     elif choice == "2":
         # Delete User
         user_name = input("Enter admin name: ")
         if user_type_db.check_user_existence(user_name):
             password = input("Enter password: ")
             user_type_db.delete_user(user_name, password)
+            display_tasks()
         else:
             print("User does not exist")
     elif choice == "3":
@@ -217,10 +229,12 @@ def display_tasks():
             user_type_db.update_password(
                 current_username, current_password, new_password
             )
+            display_tasks()
         else:
             print("User does not exist")
     elif choice == "4":
         user_type_db.view_data_table()
+        display_tasks()
     elif choice == "0":
         print("Exiting...")
         user_type_db.close_connection()
@@ -236,8 +250,9 @@ def authenticate_user(user_type="user"):
     password = input("Enter password: ")
     if user_type_db.validate_user(user_name, password, user_type):
         print(f"Access have been granted to run {user_type} task")
+        sys.exit(0)
     else:
-        print(f"You don't have acess to run {user_type} task")
+        sys.exit(1)  # Return exit code 1 for False
 
 
 if __name__ == "__main__":
@@ -246,6 +261,7 @@ if __name__ == "__main__":
         user_type_db = UserTypeDatabase("admin_database.db")
         if sys.argv[1] == "admin_level":
             authenticate_user(user_type="admin")
+
         elif sys.argv[1] == "user_level":
             authenticate_user(user_type="user")
         elif sys.argv[1] == "admin_task":
