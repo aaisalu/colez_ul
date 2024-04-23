@@ -2,6 +2,7 @@ import sqlite3
 import sys
 import getpass
 from helper_func import tabulate_it
+from helper_func import validate_input
 from termcolor import cprint
 
 
@@ -86,7 +87,7 @@ class UserTypeDatabase:
         # Check if the user exists in the database
         if self.check_user_existence(username, user_type):
             # Validate user by checking if admin_name and password match any record in the database.
-            if self.validate_user(username, password):
+            if self.validate_user(username, password, user_type):
                 # Count the number of entries in the database for the given user type
                 count_query = f"""
                 SELECT COUNT(*) FROM {user_type}
@@ -218,7 +219,7 @@ def display_tasks():
             user_type_db.delete_user(user_name, password)
             display_tasks()
         else:
-            cprint("User does not exist",'red')
+            cprint("User does not exist", "red")
     elif choice == "3":
         # Update Password
         current_username = input("Enter current username: ")
@@ -230,9 +231,9 @@ def display_tasks():
             )
             display_tasks()
         else:
-            cprint("User does not exist",'red')
+            cprint("User does not exist", "red")
     elif choice == "4":
-        # user_type_db.view_data_table(user_type="admin") #view admin password
+        # Change Admin Password
         current_username = input("Enter current username: ")
         if user_type_db.check_user_existence(current_username, user_type="admin"):
             current_password = getpass.getpass(prompt="Enter current password: ")
@@ -242,14 +243,14 @@ def display_tasks():
             )
             display_tasks()
         else:
-            cprint("Admin does not exist",'red')
+            cprint("Admin does not exist", "red")
     elif choice == "5":
         user_type_db.view_data_table()
         display_tasks()
     elif choice == "0":
-        cprint("Exiting...",'red')
+        cprint("Exiting...", "red")
     else:
-        cprint("Invalid choice. Please try again.",'yellow')
+        cprint("Invalid choice. Please try again.", "yellow")
         display_tasks()
     # After performing all necessary operations, close the database connection
     user_type_db.close_connection()

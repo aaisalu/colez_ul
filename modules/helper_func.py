@@ -110,3 +110,32 @@ col_names = [
     "Mirror_5",
     "Edit",
 ]
+
+
+def validate_input(user_input, type="username"):
+    # For username
+    # minminum 3 to 8 char
+    # only alphabet
+    # Matches any uppercase or lowercase letter.
+
+    # For password
+    # ^            Start of the string
+    # (?=.*\d)     At least one digit is required
+    # (?=.{8,})    Minimum length of 8 characters
+    # (?=.{4,})    Minimum length of 4 characters
+    # [a-zA-Z0-9]+ Only allow alphanumeric characters
+    # $            End of the string
+
+    # Regular expression pattern
+    pattern = (
+        r"^[a-zA-Z]{3,8}$"
+        if type == "username"
+        else r"^(?=.*\d)(?=.{8,})(?=.{4,})[a-zA-Z0-9]+$"
+    )
+    # Compile the pattern
+    regex = re.compile(pattern)
+    # Check if the user_input matches the pattern
+    if regex.match(user_input):
+        return True
+    else:
+        return False
