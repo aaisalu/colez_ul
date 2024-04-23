@@ -1,5 +1,6 @@
 import sqlite3
 import sys
+import getpass
 from helper_func import tabulate_it
 
 
@@ -62,7 +63,7 @@ class UserTypeDatabase:
         cursor = self.conn.cursor()
 
         # Validate user by checking if admin_name and password match any record in the database.
-        if self.validate_user(current_username, current_password):
+        if self.validate_user(current_username, current_password, user_type):
             # Update password only for the current user
             update_query = f"""
             UPDATE {user_type}
@@ -184,7 +185,6 @@ class UserTypeDatabase:
 
         # Fetch the result
         result = cursor.fetchone()
-
         # If result is not None, admin name exists in the database
         if result:
             return True
@@ -197,8 +197,9 @@ def display_tasks():
     table_data = [
         ["1", "Add User"],
         ["2", "Delete User"],
-        ["3", "Update Password"],
-        ["4", "View User"],
+        ["3", "Update User Password"],
+        ["4", "Update Admin Password"],
+        ["5", "View User"],
         ["0", "Exit"],
     ]
     tabulate_it(table_data, ["S.N", "Tasks"], "green")
@@ -208,14 +209,14 @@ def display_tasks():
     if choice == "1":
         # Add User
         user_name = input("Enter user name: ")
-        password = input("Enter password: ")
+        password = getpass.getpass(prompt="Enter password: ")
         user_type_db.add_user_to_table((user_name, password), is_logged_in=True)
         display_tasks()
     elif choice == "2":
         # Delete User
         user_name = input("Enter admin name: ")
         if user_type_db.check_user_existence(user_name):
-            password = input("Enter password: ")
+            password = getpass.getpass(prompt="Enter password: ")
             user_type_db.delete_user(user_name, password)
             display_tasks()
         else:
@@ -224,8 +225,8 @@ def display_tasks():
         # Update Password
         current_username = input("Enter current username: ")
         if user_type_db.check_user_existence(current_username):
-            current_password = input("Enter current password: ")
-            new_password = input("Enter new password: ")
+            current_password = getpass.getpass(prompt="Enter current password: ")
+            new_password = getpass.getpass(prompt="Enter new password: ")
             user_type_db.update_password(
                 current_username, current_password, new_password
             )
@@ -233,6 +234,18 @@ def display_tasks():
         else:
             print("User does not exist")
     elif choice == "4":
+        user_type_db.view_data_table(user_type="admin")
+        current_username = input("Enter current username: ")
+        if user_type_db.check_user_existence(current_username, user_type="admin"):
+            current_password = getpass.getpass(prompt="Enter current password: ")
+            new_password = getpass.getpass(prompt="Enter new password: ")
+            user_type_db.update_password(
+                current_username, current_password, new_password, user_type="admin"
+            )
+            display_tasks()
+        else:
+            print("Admin does not exist")
+    elif choice == "5":
         user_type_db.view_data_table()
         display_tasks()
     elif choice == "0":
@@ -247,7 +260,7 @@ def display_tasks():
 
 def authenticate_user(user_type="user"):
     user_name = input("Enter user name: ")
-    password = input("Enter password: ")
+    password = getpass.getpass(prompt="Enter password: ")
     if user_type_db.validate_user(user_name, password, user_type):
         print(f"Access have been granted to run {user_type} task")
         sys.exit(0)
@@ -261,7 +274,6 @@ if __name__ == "__main__":
         user_type_db = UserTypeDatabase("admin_database.db")
         if sys.argv[1] == "admin_level":
             authenticate_user(user_type="admin")
-
         elif sys.argv[1] == "user_level":
             authenticate_user(user_type="user")
         elif sys.argv[1] == "admin_task":
