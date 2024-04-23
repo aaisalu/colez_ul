@@ -70,7 +70,8 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     ) else if /I "%drs%" EQU "5" (
     goto :repairSys
     ) else if /I "%drs%" EQU "0" (
-    goto:choice
+    @REM goto:choice
+    exit
     ) else (
     goto :farfrom
     )
