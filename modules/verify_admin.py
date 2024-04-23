@@ -19,8 +19,8 @@ class UserTypeDatabase:
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {user_type} (
             sn INTEGER PRIMARY KEY AUTOINCREMENT,
-            {user_type}_name TEXT CHECK(length({user_type}_name) <= 10),
-            password TEXT CHECK(length(password) <= 10)
+            {user_type}_name TEXT CHECK(LENGTH({user_type}_name) <= 8),
+            password TEXT CHECK(LENGTH(password) <= 8)
         )
         """
         cursor.execute(create_table_query)
