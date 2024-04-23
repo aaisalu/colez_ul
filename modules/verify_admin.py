@@ -9,13 +9,13 @@ from termcolor import cprint
 class UserTypeDatabase:
     def __init__(self, database_name):
         """Initialize the Database with the specified SQLite database."""
-        self.conn = sqlite3.connect(database_name)
+        self.livewire = sqlite3.connect(database_name)
         self.create_custom_table(user_type="admin")
         self.create_custom_table(user_type="user")
 
     def create_custom_table(self, user_type="user"):
         """Create the custom table if it doesn't exist."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
         create_table_query = f"""
         CREATE TABLE IF NOT EXISTS {user_type} (
             sn INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +24,7 @@ class UserTypeDatabase:
         )
         """
         cursor.execute(create_table_query)
-        self.conn.commit()
+        self.livewire.commit()
         if not self.check_user_existence("admin", user_type="admin"):
             """Add a default admin for managing admin task """
             self.add_user_to_table(
@@ -35,7 +35,7 @@ class UserTypeDatabase:
     def add_user_to_table(self, user_data, is_logged_in, user_type="user"):
         """Add user data to the table if it doesn't already exist and the current user is logged in."""
         if is_logged_in:
-            cursor = self.conn.cursor()
+            cursor = self.livewire.cursor()
             user_name = user_data[0].strip()  # Trim leading and trailing spaces
             password = user_data[1].strip()  # Trim leading and trailing spaces
 
@@ -46,9 +46,9 @@ class UserTypeDatabase:
                 VALUES (?, ?)
                 """
                 cursor.execute(add_query, (user_name, password))
-                self.conn.commit()
+                self.livewire.commit()
                 print(f"{user_type} added successfully.")
-                self.conn.commit()  # Update sn to rowid
+                self.livewire.commit()  # Update sn to rowid
                 self.reassign_serial_numbers(user_type)
             else:
                 cprint(f"{user_type} with the same name already exists.",'yellow')
@@ -59,7 +59,7 @@ class UserTypeDatabase:
         self, current_username, current_password, new_password, user_type="user"
     ):
         """Update the password of the current user."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
 
         # Validate user by checking if admin_name and password match any record in the database.
         if self.validate_user(current_username, current_password, user_type):
@@ -72,7 +72,7 @@ class UserTypeDatabase:
             cursor.execute(
                 update_query, (new_password, current_username, current_password)
             )
-            self.conn.commit()
+            self.livewire.commit()
             self.reassign_serial_numbers(user_type)
             cprint("Password updated successfully.",'green')
         else:
@@ -82,7 +82,7 @@ class UserTypeDatabase:
 
     def delete_user(self, username, password, user_type="user"):
         """Delete a user if the provided username and password are validated."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
 
         # Check if the user exists in the database
         if self.check_user_existence(username, user_type):
@@ -104,7 +104,7 @@ class UserTypeDatabase:
                     WHERE {user_type}_name = ? AND password = ?
                     """
                     cursor.execute(delete_query, (username, password))
-                    self.conn.commit()
+                    self.livewire.commit()
                     self.reassign_serial_numbers(user_type)
                     cprint("User deleted successfully.",'green')
             else:
@@ -116,7 +116,7 @@ class UserTypeDatabase:
 
     def view_data_table(self, user_type="user"):
         """View the contents of the admin table."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
         view_query = f"""
         SELECT * FROM {user_type}
         """
@@ -132,7 +132,7 @@ class UserTypeDatabase:
 
     def reassign_serial_numbers(self, user_type="user"):
         """Reassign serial numbers based on the current order of records in the database."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
         reassign_query = f"""
         UPDATE {user_type}
         SET sn = rowid
@@ -154,15 +154,15 @@ class UserTypeDatabase:
         """
         for index, record in enumerate(updated_records, start=1):
             cursor.execute(update_sn_query, (index, record[0]))
-        self.conn.commit()
+        self.livewire.commit()
 
     def close_connection(self):
         """Close the database connection."""
-        self.conn.close()
+        self.livewire.close()
 
     def validate_user(self, user_name, password, user_type="user"):
         """Validate user by checking if user_name and password match any record in the database."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
         validate_query = f"""
         SELECT * FROM {user_type} WHERE {user_type}_name = ? AND password = ?
         """
@@ -174,7 +174,7 @@ class UserTypeDatabase:
 
     def check_user_existence(self, user_name, user_type="user"):
         """Check if an user name is present in the database."""
-        cursor = self.conn.cursor()
+        cursor = self.livewire.cursor()
 
         # Query to check if the user name exists in the database
         check_query = f"""
