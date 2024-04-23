@@ -228,7 +228,8 @@ def display_tasks():
         # Add User
         user_name = input("Enter user name: ")
         password = getpass.getpass(prompt="Enter password: ")
-        print(validate_input(user_name), validate_input(password, type="password"))
+        # Debugging code
+        # print(validate_input(user_name), validate_input(password, type="password"))
         # Validate username and password
         if validate_input(user_name) and validate_input(password, type="password"):
             user_type_db.add_user_to_table((user_name, password), is_logged_in=True)

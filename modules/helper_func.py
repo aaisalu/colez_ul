@@ -121,7 +121,7 @@ def validate_input(user_input, type="username"):
     # For password
     # ^            Start of the string
     # (?=.*\d)     At least one digit is required
-    # (?=.{8,})    Minimum length of 8 characters
+    # (?=.{8,})    Minimum length of 6 characters
     # (?=.{4,})    Minimum length of 4 characters
     # [a-zA-Z0-9]+ Only allow alphanumeric characters
     # $            End of the string
@@ -130,7 +130,7 @@ def validate_input(user_input, type="username"):
     pattern = (
         r"^[a-zA-Z]{3,8}$"
         if type == "username"
-        else r"^(?=.*\d)(?=.{8,})(?=.{4,})[a-zA-Z0-9]+$"
+        else r"^(?=.*\d)(?=.{6,})(?=.{4,})[a-zA-Z0-9]+$"
     )
     # Compile the pattern
     regex = re.compile(pattern)
