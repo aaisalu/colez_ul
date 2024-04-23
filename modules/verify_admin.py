@@ -2,6 +2,7 @@ import sqlite3
 import sys
 import getpass
 from helper_func import tabulate_it
+from termcolor import cprint
 
 
 class UserTypeDatabase:
@@ -28,7 +29,7 @@ class UserTypeDatabase:
             self.add_user_to_table(
                 ("admin", "admin123"), is_logged_in=True, user_type="admin"
             )
-            print("Super user added successfully.")
+            cprint("Super user added successfully.",'green')
 
     def add_user_to_table(self, user_data, is_logged_in, user_type="user"):
         """Add user data to the table if it doesn't already exist and the current user is logged in."""
@@ -49,9 +50,9 @@ class UserTypeDatabase:
                 self.conn.commit()  # Update sn to rowid
                 self.reassign_serial_numbers(user_type)
             else:
-                print(f"{user_type} with the same name already exists.")
+                cprint(f"{user_type} with the same name already exists.",'yellow')
         else:
-            print("You are not logged in. Please log in to add another admin.")
+            cprint("You are not logged in. Please log in to add another admin.",'red')
 
     def update_password(
         self, current_username, current_password, new_password, user_type="user"
@@ -72,10 +73,10 @@ class UserTypeDatabase:
             )
             self.conn.commit()
             self.reassign_serial_numbers(user_type)
-            print("Password updated successfully.")
+            cprint("Password updated successfully.",'green')
         else:
-            print(
-                "Authentication failed. Please provide correct current username and password."
+            cprint(
+                "Authentication failed. Please provide correct current username and password.",'yellow'
             )
 
     def delete_user(self, username, password, user_type="user"):
@@ -94,7 +95,7 @@ class UserTypeDatabase:
                 num_entries = cursor.fetchone()[0]
 
                 if num_entries == 1:
-                    print("Cannot delete the last user entry.")
+                    cprint("Cannot delete the last user entry.",'yellow')
                 else:
                     # Delete the user from the database
                     delete_query = f"""
@@ -104,13 +105,13 @@ class UserTypeDatabase:
                     cursor.execute(delete_query, (username, password))
                     self.conn.commit()
                     self.reassign_serial_numbers(user_type)
-                    print("User deleted successfully.")
+                    cprint("User deleted successfully.",'green')
             else:
-                print(
-                    "Authentication failed. Please provide correct username and password."
+                cprint(
+                    "Authentication failed. Please provide correct username and password.","yellow"
                 )
         else:
-            print("User does not exist in the database.")
+            cprint("User does not exist in the database.",'red')
 
     def view_data_table(self, user_type="user"):
         """View the contents of the admin table."""
@@ -126,7 +127,7 @@ class UserTypeDatabase:
         for record in user_records:
             # :<15 ensures padded with spaces to a width of 15 characters.
             table_data.append([record[0], f"{record[1]:<15}", record[2]])
-        tabulate_it(table_data, table_headers, "green")
+        tabulate_it(table_data, table_headers, "blue")
 
     def reassign_serial_numbers(self, user_type="user"):
         """Reassign serial numbers based on the current order of records in the database."""
@@ -217,7 +218,7 @@ def display_tasks():
             user_type_db.delete_user(user_name, password)
             display_tasks()
         else:
-            print("User does not exist")
+            cprint("User does not exist",'red')
     elif choice == "3":
         # Update Password
         current_username = input("Enter current username: ")
@@ -229,7 +230,7 @@ def display_tasks():
             )
             display_tasks()
         else:
-            print("User does not exist")
+            cprint("User does not exist",'red')
     elif choice == "4":
         # user_type_db.view_data_table(user_type="admin") #view admin password
         current_username = input("Enter current username: ")
@@ -241,14 +242,14 @@ def display_tasks():
             )
             display_tasks()
         else:
-            print("Admin does not exist")
+            cprint("Admin does not exist",'red')
     elif choice == "5":
         user_type_db.view_data_table()
         display_tasks()
     elif choice == "0":
-        print("Exiting...")
+        cprint("Exiting...",'red')
     else:
-        print("Invalid choice. Please try again.")
+        cprint("Invalid choice. Please try again.",'yellow')
         display_tasks()
     # After performing all necessary operations, close the database connection
     user_type_db.close_connection()
@@ -258,7 +259,7 @@ def authenticate_user(user_type="user"):
     user_name = input(f"Enter {user_type} name: ")
     password = getpass.getpass(prompt="Enter password: ")
     if user_type_db.validate_user(user_name, password, user_type):
-        print(f"Access have been granted to run {user_type} task")
+        cprint(f"Access have been granted to run {user_type} task",'green')
         sys.exit(0)
     else:
         sys.exit(1)  # Return exit code 1 for False
@@ -266,7 +267,7 @@ def authenticate_user(user_type="user"):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        # Instantiate an object of the AdminDatabase class
+        # Instantiate an object of the database class
         user_type_db = UserTypeDatabase("admin_database.db")
         if sys.argv[1] == "admin_level":
             authenticate_user(user_type="admin")

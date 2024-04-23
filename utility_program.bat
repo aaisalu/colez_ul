@@ -24,7 +24,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     echo[
     echo    Press 1 = Summon Python Program
     echo    Press 2 = Utility Program
-    echo    Press 3 = Control Panel
+    echo    Press 3 = Admin Control Panel
     echo    [90mPress 0 = Leave[0m
     echo[
     :brain
@@ -614,7 +614,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     IF %EXIT_CODE% neq 1 (
         goto:cpanel
     ) ELSE (
-        echo You don't have have access to contol Panel
+        echo [31m-: Access to the Control Panel has been denied. :-[0m
         goto:choice
     )
 
@@ -642,7 +642,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     IF %EXIT_CODE% neq 1 (
         goto:farfrom
     ) ELSE (
-        echo You don't have have access to run the admin task
+        echo [31m-: You don't have have access to run the admin task :-[0m
         goto:choice
     )
 :userLevel
@@ -652,7 +652,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     IF %EXIT_CODE% neq 1 (
         goto:chkifpy
     ) ELSE (
-        echo You don't have have access to run the user task
+        echo [31m-: You don't have have access to run the user task :-[0m
         goto:choice
     )
 
