@@ -60,7 +60,6 @@ def process_it(chunk):
             resolved_cloudfare = resolved_download_links["Cloudflare"]
             resolved_ipfs = resolved_download_links["IPFS.io"]
             Donwload_links = f"<a class='resolved_links' href={resolved_cloudfare} target='_blank'>Link 1</a></br><a class='resolved_links' href={resolved_ipfs} target='_blank'>Link 2</a>"
-            # TODO add mirror 4 </br > <a class = 'mirror_links' href = {bit['Mirror_4']} target = '_blank' > Mirror 4 < /a >
             Donwload_mirror = f"<a class='mirror_links' href={bit['Mirror_1']} target='_blank'>Mirror 1</a></br><a class='mirror_links' href={bit['Mirror_2']} target='_blank'>Mirror 2</a></br><a class='mirror_links' href={bit['Mirror_3']} target='_blank'>Mirror 3</a>"
             columns = (
                 index,

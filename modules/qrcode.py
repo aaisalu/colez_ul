@@ -13,8 +13,6 @@ just_fix_windows_console()
 
 
 def beautify(info):
-    # ver=input("What version would you like as QRcode output? [1-40]: ")
-    # color=input("Do you love colors? [yes/no]: ")
     value = info, None, "png", True, 10
     return roulette(value)
 
