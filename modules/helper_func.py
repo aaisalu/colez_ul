@@ -41,9 +41,9 @@ def chkreg(string, answer):
 def sanitize_filename(filename):
     # Define forbidden characters based on the operating system
     if sys.platform.startswith("win"):
-        forbidden_chars = r'[\\/:*?"<>|\x00-\x1F]'
+        forbidden_chars = r'[\\/:*?"<>|]'
     else:  # Assuming Linux/Unix for non-Windows platforms
-        forbidden_chars = r"/\x00-\x1F"
+        forbidden_chars = r"/"
 
     # Remove forbidden characters from the filenames
     sanitized_filename = re.sub(forbidden_chars, "", filename)
@@ -87,6 +87,7 @@ def return_path(parent_dir, file_name):
     elif Path(parent_path).exists():
         return parent_path
     else:
+        #  encoding parameter allows you to specify the character encoding to be used when reading or writing the file.
         default_path if Path(default_path).exists() else Path(default_path).mkdir()
         open(default_path / default_filename, "a+", encoding="utf-8")
         return initial_path
@@ -121,16 +122,14 @@ def validate_input(user_input, type="username"):
     # For password
     # ^            Start of the string
     # (?=.*\d)     At least one digit is required
-    # (?=.{8,})    Minimum length of 6 characters
-    # (?=.{4,})    Minimum length of 4 characters
-    # [a-zA-Z0-9]+ Only allow alphanumeric characters
+    # (?=.{6,12})  Minimum length of 6 characters with maximum of 12 char
+    # [a-zA-Z0-9]+ Only allow alphanumeric characters (both lowercase and uppercase) one or more times.
     # $            End of the string
-
     # Regular expression pattern
     pattern = (
         r"^[a-zA-Z]{3,8}$"
         if type == "username"
-        else r"^(?=.*\d)(?=.{6,})(?=.{4,})[a-zA-Z0-9]+$"
+        else r"^(?=.*\d)(?=.{6,12})[a-zA-Z0-9]+$"
     )
     # Compile the pattern
     regex = re.compile(pattern)
