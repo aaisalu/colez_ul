@@ -100,7 +100,6 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
             echo As the task can't be run without the Administrator privileges
             echo [92mDo you want to open the script with the Administrator privileges?[0m
             pause
-            ::Thanks to Ir Relevant & ceztko for admin prevlge stackoverflow.com/a/24665214
             Net session >nul 2>&1
             if not '%errorlevel%' == '0' (
                 PowerShell start -verb runas '%~0' &exit /b)
@@ -565,7 +564,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     IF  %ERRORLEVEL% EQU 0 (
     echo [92mInstalling the required requirements for the python script to work[0m
     echo[
-    cmd /k "cd %~dp0\venv\Scripts & activate & cd /d %~dp0 & pip install -U -r requirements.txt & cd /d%~dp0\venv\Scripts & deactivate.bat & exit"
+    @REM cmd /k "cd %~dp0\venv\Scripts & activate & cd /d %~dp0 & pip install -U -r requirements.txt & cd /d%~dp0\venv\Scripts & deactivate.bat & exit"
     echo [92mSuccessfully installed and updated requirements![0m
     echo[
     echo                         [92mKx-----  Python is found lurking around, so I'll lend you my power -----Cx[0m
