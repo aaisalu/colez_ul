@@ -47,7 +47,7 @@ class UserTypeDatabase:
                 """
                 cursor.execute(add_query, (user_name, password))
                 self.livewire.commit()
-                print(f"{user_type} added successfully.")
+                cprint(f"{user_type.capitalize()} added successfully.",'green')
                 self.livewire.commit()  # Update sn to rowid
                 self.reassign_serial_numbers(user_type)
             else:
@@ -195,19 +195,40 @@ def update_password(user_type_db, user_type=None):
     current_username = input("Enter username to change: ")
     if user_type_db.check_user_existence(current_username, user_type):
         current_password = getpass.getpass(prompt="Enter current password: ")
-        new_password = getpass.getpass(prompt="Enter new password: ")
-        # Validate new password
-        if validate_input(new_password, type="password"):
-            user_type_db.update_password(
-                current_username, current_password, new_password, user_type=user_type
-            )
-            display_tasks()
+        if (user_type_db.validate_user(current_username, current_password, user_type)):
+            user_info(type='password')
+            new_password = getpass.getpass(prompt="Enter new password: ")
+            # Validate new password
+            if validate_input(new_password, type="password"):
+                user_type_db.update_password(
+                    current_username, current_password, new_password, user_type=user_type
+                )
+                display_tasks()
+            else:
+                cprint("Invalid new password format. Please try again.", "yellow")
+                display_tasks()
         else:
-            cprint("Invalid new password format. Please try again.", "yellow")
+            cprint(
+                f"{user_type.capitalize()}'s account credentials are incorrect.",
+                "red",
+            )
             display_tasks()
     else:
         cprint(f"{user_type.capitalize()} account does not exist", "red")
         display_tasks()
+
+
+def user_info(type="both"):
+    cprint("\n-- Account validation info --")
+    if type in ["both", "username"]:
+        cprint(
+            "Usernames should be between 3 and 8 characters long and should only contain letters.",'green'
+        )
+    if type in ["both", "password"]:
+        cprint(
+            "Password needs to be between 6 and 12 characters long and include at least one number.",'green'
+        )
+    print("")
 
 
 def display_tasks():
@@ -225,6 +246,7 @@ def display_tasks():
     choice = input("Enter your choice: ")
 
     if choice == "1":
+        user_info()
         # Add User
         user_name = input("Enter user name: ")
         password = getpass.getpass(prompt="Enter password: ")
