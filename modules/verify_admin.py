@@ -279,7 +279,7 @@ def display_tasks():
         user_type_db.view_data_table()
         display_tasks()
     elif choice == "0":
-        cprint("Exiting...", "red")
+        cprint("Exiting admin control panel", "red")
     else:
         cprint("Invalid choice. Please try again.", "yellow")
         display_tasks()
