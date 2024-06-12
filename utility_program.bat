@@ -105,7 +105,6 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
                 PowerShell start -verb runas '%~0' &exit /b)
             cd %~dp0
         )
-        :: Thanks Chocolatey for being it so amazing chocolatey.org
         echo[
         echo                                                         Welcome To The
         echo                                                 Chocolatey Packages Repository
