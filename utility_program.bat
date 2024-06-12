@@ -456,7 +456,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
             ::for offline repair
             rem Dism /Image:C:\offline /Cleanup-Image /RestoreHealth /Source:c:\test\mount\windows
             rem Dism /Online /Cleanup-Image /CheckHealth
-            echo Please! Restart your pc
+            echo Please! Restart your computer
             echo[
             goto:farfrom
         ) ELSE (
