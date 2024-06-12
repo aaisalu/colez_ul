@@ -625,7 +625,7 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
     goto:venvreqimnt
     ) ELSE (
     echo[
-    echo [31mLooks like python is not installed on your pc[0m
+    echo [31mLooks like python is not installed on your PC[0m
     echo Please,Install python to run this script!
     echo Download from: https://www.python.org/downloads
     echo[
