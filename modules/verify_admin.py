@@ -127,7 +127,8 @@ class UserTypeDatabase:
         table_data = []
         for record in user_records:
             # :<15 ensures padded with spaces to a width of 15 characters.
-            table_data.append([record[0], f"{record[1]:<15}", record[2]])
+            masked_password = '*' * len(record[2])
+            table_data.append([record[0], f"{record[1]:<15}", masked_password])
         tabulate_it(table_data, table_headers, "blue")
 
     def reassign_serial_numbers(self, user_type="user"):
@@ -276,6 +277,13 @@ def display_tasks():
         # Change Admin Password
         update_password(user_type_db, user_type="admin")
     elif choice == "5":
+        user_name = input(f"Enter admin name: ")
+        password = getpass.getpass(prompt="Enter password: ")
+        if user_type_db.validate_user(user_name, password, "admin"):
+            cprint(f"Access have been granted.",'green')
+        else:
+            cprint(f"Access have been denied.", "green")
+            sys.exit(1)
         user_type_db.view_data_table()
         display_tasks()
     elif choice == "0":
