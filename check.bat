@@ -102,13 +102,11 @@ echo Something just fell from the sky! - oh, its %username% from %COMPUTERNAME% 
             echo As the task can't be run without the Administrator privileges
             echo [92mDo you want to open the script with the Administrator privileges?[0m
             pause
-            ::Thanks to Ir Relevant & ceztko for admin prevlge stackoverflow.com/a/24665214
             Net session >nul 2>&1
             if not '%errorlevel%' == '0' (
                 PowerShell start -verb runas '%~0' &exit /b)
             cd %~dp0
         )
-        :: Thanks Chocolatey for being it so amazing chocolatey.org
         echo[
         echo                                                         Welcome To The
         echo                                                 Chocolatey Packages Repository
