@@ -127,7 +127,9 @@ class UserTypeDatabase:
         table_data = []
         for record in user_records:
             # :<15 ensures padded with spaces to a width of 15 characters.
-            table_data.append([record[0], f"{record[1]:<15}", record[2]])
+            masked_password = '*' * len(record[2])
+            # table_data.append([record[0], f"{record[1]:<15}", record[2]])
+            table_data.append([record[0], f"{record[1]:<15}", masked_password])
         tabulate_it(table_data, table_headers, "blue")
 
     def reassign_serial_numbers(self, user_type="user"):
