@@ -17,7 +17,7 @@ class ScrapeLibgen:
         # removes italic text from the parsed data
         title_italics = soup.find_all("i")
         for italic in title_italics:
-            # Tag.decompose() removes a tag from the tree, csompletely destroys it and its contents
+            # Tag.decompose() removes a tag from the tree, completely destroys it and its contents
             italic.decompose()
 
     def search_initial_page(self):
@@ -40,10 +40,10 @@ class ScrapeLibgen:
         parsed_data = BeautifulSoup(raw_data.text, "lxml")
 
         self.destroy_italic_text(parsed_data)
-        # site contains use of  4 tables tag is in table data in table 3 so as slicing at 2 as 0 based
+        # site contains use of  4 tables tag is in table data in table 3 so as slicing at 2 as it's 0 index based
         parsed_table = parsed_data.find_all("table")[2]
         processed_data = []
-        # don't scrape the table title data scrape from index 1 to all
+        # don't scrape the table header title data scrape from index 1 to all
         # scrape all the table row data
         for row in parsed_table.find_all("tr")[1:]:
             processed_row = []
